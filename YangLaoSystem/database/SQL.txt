@@ -1,0 +1,53 @@
+CREATE TABLE old_person (
+	ID char(30) PRIMARY KEY,
+	name char(20) not null,
+	gender char(1),
+	tel char(20),
+	inDate DATE,
+	outDate DATE,
+	valid char(1),
+	facePic char(50),
+	PicLib char(50),
+	roomNo char(10),
+	C1 char(30),
+	C2 char(30),
+	C3 char(30),
+	health char(10),
+	describe char(100),
+	carer char(30))
+
+CREATE TABLE worker(
+	ID char(30) PRIMARY KEY,
+	name char(20) not null,
+	gender char(1),
+	tel char(20),
+	type char(1),
+	valid char(1),
+	facePic char(50),
+	PicLib char(50))
+
+CREATE TABLE event_info(
+	eNo char(20) PRIMARY KEY,
+	eType char(1),
+	eTime time,
+	location char(5),
+	old char(30))
+
+CREATE TABLE custodian(
+	ID char(30) PRIMARY KEY,
+	name char(20) not null,
+	gender char(1),
+	tel char(20),
+	relation char(10))
+
+CREATE TABLE admins(
+	ID char(30) PRIMARY KEY,
+	name char(20) not null,
+	gender char(1),
+	tel char(20),
+	userID char(20),
+	password char(20))
+
+
+INSERT INTO admins VALUES ('ad001','admin','m', '15277788152', '123456', '123456')
+INSERT INTO admins VALUES ('ad002','admin2','f', '152111222152', '234567', '234567')
