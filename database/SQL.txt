@@ -47,3 +47,7 @@ CREATE TABLE admins(
 	tel char(20),
 	userID char(20),
 	password char(20))
+
+
+INSERT INTO admins VALUES ('ad001','admin','m', '15277788152', '123456', '123456')
+INSERT INTO admins VALUES ('ad002','admin2','f', '152111222152', '234567', '234567')
