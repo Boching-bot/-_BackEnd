@@ -31,6 +31,7 @@ app = Flask(__name__)
 video_camera = None
 global_frame = None
 
+
 @ app.route('/')
 
 
