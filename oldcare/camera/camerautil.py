@@ -6,7 +6,16 @@ from statistics import mode
 import cv2
 from keras.models import load_model
 import numpy as np
-from utils import preprocess_input
+
+
+def preprocess_input(x, v2=True):
+    x = x.astype('float32')
+    x = x / 255.0
+    if v2:
+        x = x - 0.5
+        x = x * 2.0
+    return x
+
 
 # parameters for loading data and images
 detection_model_path = 'trained_models/facemodel/haarcascade_frontalface_default.xml'
