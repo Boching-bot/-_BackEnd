@@ -53,5 +53,14 @@ INSERT INTO admins VALUES ('ad001','admin','m', '15277788152', '123456', '123456
 INSERT INTO admins VALUES ('ad002','admin2','f', '152111222152', '234567', '234567')
 
 
-
+CREATE PROCEDURE register
+@ID CHAR(30), @name CHAR(20), @userID CHAR(20), @pw CHAR(20), @AID CHAR(20), @Apw CHAR(20)
+AS
+	IF(EXISTS (SELECT * FROM admins WHERE userID = @AID AND password = @Apw))
+		BEGIN
+			INSERT INTO admins (ID, name, userID, password) VALUES (@ID, @name, @userID, @pw)
+			RETURN 0
+		END
+	ELSE
+		RETURN 1
 

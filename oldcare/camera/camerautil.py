@@ -365,9 +365,6 @@ def fall_Detection(frame):
     return img
 
 
-
-
-
 class RecordingThread(threading.Thread):
     def __init__(self, name, camera, save_video_path):
         threading.Thread.__init__(self)
@@ -429,13 +426,13 @@ class VideoCamera(object):
             #frame = img
 
             # 3. 区域非法入侵检测
-            illegalInvasion(img)
-
-            # 4. 情绪，姿态，跌倒检测
             #frame = cv2.flip(frame, 1)
-            #Function1: face detection and emotion analyze
-            #frame = faceEmotion(frame)
-            #frame = fall_Detection(frame)
+            #illegalInvasion(frame)
+
+            #4. 情绪，姿态，跌倒检测
+            frame = cv2.flip(frame, 1)
+            frame = faceEmotion(frame)
+            frame = fall_Detection(frame)
 
             #out1 = faceEmotion(frame)
             #frame = fall_Detection(out1)
