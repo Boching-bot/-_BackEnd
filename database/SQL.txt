@@ -52,6 +52,15 @@ CREATE TABLE admins(
 INSERT INTO admins VALUES ('ad001','admin','m', '15277788152', '123456', '123456')
 INSERT INTO admins VALUES ('ad002','admin2','f', '152111222152', '234567', '234567')
 
+INSERT INTO worker VALUES('19301060','hbc','m','193010666','e','0','','')
+INSERT INTO worker VALUES('19301056','zn','m','193010777','e','0','','')
+INSERT INTO worker VALUES('19301061','jyh','m','193010888','v','0','','')
+INSERT INTO worker VALUES('19301000','ABC','f','193010999','v','0','','')
+
+INSERT INTO old_person VALUES('001','old_1','m','123123',GETDATE()-10,'','0','','','326','','','','health','','19301060')
+INSERT INTO old_person VALUES('002','old_2','m','111222',GETDATE()-7,'','0','','','326','','','','health','','19301061')
+INSERT INTO old_person VALUES('003','old_3','f','133133',GETDATE()-6,'','0','','','328','','','','fever','','19301000')
+
 
 CREATE PROCEDURE register
 @ID CHAR(30), @name CHAR(20), @userID CHAR(20), @pw CHAR(20), @AID CHAR(20), @Apw CHAR(20)

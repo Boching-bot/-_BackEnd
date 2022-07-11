@@ -12,8 +12,12 @@ python startingcameraservice.py --location room
 
 '''
 import argparse
-from flask import Flask, render_template, Response, request
+from flask import Flask, render_template, Response, request, jsonify
 from oldcare.camera import VideoCamera
+import database.utils as util
+import json
+import pymssql
+from flask_cors import  CORS
 
 # 传入参数
 ap = argparse.ArgumentParser()
@@ -22,17 +26,50 @@ ap.add_argument("-f", "--location", required=False,
 args = vars(ap.parse_args())
 location = args['location']
 
+
+
 if location not in ['room', 'yard', 'corridor', 'desk']:
     raise ValueError('location must be one of room, yard, corridor or desk')
 
 # API
 app = Flask(__name__)
+CORS(app, resources=r'/*')
+
+connect = pymssql.connect(host="LAPTOP-NJC0SCGO", user="sa", password="123456", database="ZHYL", charset="utf8",
+                          autocommit=True)
+cur = connect.cursor()
 
 video_camera = None
 global_frame = None
 
 
 @ app.route('/')
+
+@app.route('/login', methods=['GET'])
+def login():
+    id = request.args.to_dict().get('id')
+    pw = request.args.to_dict().get('pw')
+    result = util.login(id, pw, cur)
+    return jsonify(result)
+
+
+@app.route('/register', methods=['GET'])
+def register():
+    id = request.args.to_dict().get('id')
+    name = request.args.to_dict().get('name')
+    uid = request.args.to_dict().get('uid')
+    pw = request.args.to_dict().get('pw')
+    aid = request.args.to_dict().get('aid')
+    apw = request.args.to_dict().get('apw')
+    result = util.register(id, name, uid, pw, aid, apw, cur)
+    return jsonify(result)
+
+
+@ app.route('/state3', methods=['GET'])
+def state3():
+    re = request.args.to_dict().get('id')
+    print(re)
+    return jsonify(0)
 
 
 def index():
