@@ -65,11 +65,141 @@ def register():
     return jsonify(result)
 
 
-@ app.route('/state3', methods=['GET'])
-def state3():
-    re = request.args.to_dict().get('id')
-    print(re)
-    return jsonify(0)
+@app.route('/showAllOld_1', methods=['GET'])
+def showAllOld_1():
+    result = util.showAllOld_1(cur)
+    return jsonify(result)
+
+
+@app.route('/showAllOld_2', methods=['GET'])
+def showAllOld_2():
+    result = util.showAllOld_2(cur)
+    return jsonify(result)
+
+
+@app.route('/deleteOld', methods=['GET'])
+def deleteOld():
+    id = request.args.to_dict().get('ID')
+    result = util.deleteOld(id, cur)
+    return jsonify(result)
+
+
+@app.route('/updateOld_1', methods=['GET'])
+def updateOld_1():
+    id = request.args.to_dict().get('ID')
+    rNo = request.args.to_dict().get('roomNo')
+    h = request.args.to_dict().get('health')
+    result = util.updateOld_1(id, rNo, h, cur)
+    return jsonify(result)
+
+
+@app.route('/updateOld_2', methods=['GET'])
+def updateOld_2():
+    id = request.args.to_dict().get('ID')
+    tel = request.args.to_dict().get('tel')
+    C1 = request.args.to_dict().get('Cone')
+    # if not C1:
+    #     C1 = ''
+    C2 = request.args.to_dict().get('Ctwo')
+    # if not C2:
+    #     C2 = ''
+    carer = request.args.to_dict().get('carer')
+    #print(id, tel, C1, C2, carer)
+    result = util.updateOld_2(id, tel, C1, C2, carer, cur)
+    return jsonify(result)
+
+
+@app.route('/insertOld_1', methods=['GET'])
+def insertOld_1():
+    id = request.args.to_dict().get('ID')
+    name = request.args.to_dict().get('name')
+    gender = request.args.to_dict().get('gender')
+    rNo = request.args.to_dict().get('roomNo')
+    h = request.args.to_dict().get('health')
+    result = util.insertOld_1(id,name,gender,rNo,h,cur)
+    return jsonify(result)
+
+
+@app.route('/insertOld_2', methods=['GET'])
+def insertOld_2():
+    id = request.args.to_dict().get('ID')
+    name = request.args.to_dict().get('name')
+    tel = request.args.to_dict().get('tel')
+    C1 = request.args.to_dict().get('Cone')
+    C2 = request.args.to_dict().get('Ctwo')
+    carer = request.args.to_dict().get('carer')
+    result = util.insertOld_2(id, name, tel, C1, C2, carer, cur)
+    return jsonify(result)
+
+
+@app.route('/showAllWorker', methods=['GET'])
+def showAllWorker():
+    result = util.showAllWorker(cur)
+    return jsonify(result)
+
+
+@app.route('/deleteWorker', methods=['GET'])
+def deleteWorker():
+    id = request.args.to_dict().get('ID')
+    result = util.deleteWorker(id,cur)
+    return jsonify(result)
+
+
+@app.route('/updateWorker', methods=['GET'])
+def updateWorker():
+    id = request.args.to_dict().get('ID')
+    tel = request.args.to_dict().get('tel')
+    type = request.args.to_dict().get('type')
+    valid = request.args.to_dict().get('valid')
+    #print(id,tel,type,valid)
+    result = util.updateWorker(id, tel, type, valid, cur)
+    return jsonify(result)
+
+
+@app.route('/insertWorker', methods=['GET'])
+def insertWorker():
+    id = request.args.to_dict().get('ID')
+    name = request.args.to_dict().get('name')
+    gender = request.args.to_dict().get('gender')
+    tel = request.args.to_dict().get('tel')
+    t = request.args.to_dict().get('type')
+    v = request.args.to_dict().get('valid')
+    result = util.insertWorker(id, name, gender, tel, t, v, cur)
+    return jsonify(result)
+
+@app.route('/showAllAdmin', methods=['GET'])
+def showAllAdmin():
+    result = util.showAllAdmin(cur)
+    return jsonify(result)
+
+
+@app.route('/deleteAdmin', methods=['GET'])
+def deleteAdmin():
+    id = request.args.to_dict().get('ID')
+    result = util.deleteWorker(id,cur)
+    return jsonify(result)
+
+
+@app.route('/updateAdmin', methods=['GET'])
+def updateAdmin():
+    id = request.args.to_dict().get('ID')
+    tel = request.args.to_dict().get('tel')
+    password = request.args.to_dict().get('password')
+    result = util.updateAdmin(id, tel, password, cur)
+    return jsonify(result)
+
+
+@app.route('/insertAdmin', methods=['GET'])
+def insertAdmin():
+    id = request.args.to_dict().get('ID')
+    name = request.args.to_dict().get('name')
+    gender = request.args.to_dict().get('gender')
+    tel = request.args.to_dict().get('tel')
+    uid = request.args.to_dict().get('userID')
+    pw = request.args.to_dict().get('password')
+    result = util.insertAdmin(id, name, gender, tel, uid, pw, cur)
+    return jsonify(result)
+
 
 
 def index():

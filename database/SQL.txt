@@ -57,8 +57,8 @@ INSERT INTO worker VALUES('19301056','zn','m','193010777','e','0','','')
 INSERT INTO worker VALUES('19301061','jyh','m','193010888','v','0','','')
 INSERT INTO worker VALUES('19301000','ABC','f','193010999','v','0','','')
 
-INSERT INTO old_person VALUES('001','old_1','m','123123',GETDATE()-10,'','0','','','326','','','','health','','19301060')
-INSERT INTO old_person VALUES('002','old_2','m','111222',GETDATE()-7,'','0','','','326','','','','health','','19301061')
+INSERT INTO old_person VALUES('001','old_1','m','123123',GETDATE()-10,'','0','','','326','','','','healthy','','19301060')
+INSERT INTO old_person VALUES('002','old_2','m','111222',GETDATE()-7,'','0','','','326','','','','healthy','','19301061')
 INSERT INTO old_person VALUES('003','old_3','f','133133',GETDATE()-6,'','0','','','328','','','','fever','','19301000')
 
 
