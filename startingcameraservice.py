@@ -13,7 +13,7 @@ python startingcameraservice.py --location room
 '''
 import argparse
 from flask import Flask, render_template, Response, request, jsonify
-from oldcare.camera import VideoCamera
+from oldcare.camera import VideoCamera, VideoCamera2
 import database.utils as util
 import json
 import pymssql
@@ -42,8 +42,70 @@ cur = connect.cursor()
 video_camera = None
 global_frame = None
 
+state = 2
+video_camera2 = None
+global_frame2 = None
+
 
 @ app.route('/')
+
+
+@ app.route('/state1')
+def state1():
+    re = request.args.to_dict().get('id')
+    global state
+    print(re)
+    state = int(re)
+    return jsonify(0)
+@ app.route('/state2')
+def state2():
+    re = request.args.to_dict().get('id')
+    global state
+    print(re)
+    state = int(re)
+    return jsonify(0)
+@ app.route('/state3')
+def state3():
+    re = request.args.to_dict().get('id')
+    global state
+    print(re)
+    state = int(re)
+    return jsonify(0)
+@ app.route('/state4')
+def state4():
+    re = request.args.to_dict().get('id')
+    global state
+    print(re)
+    state = int(re)
+    return jsonify(0)
+
+
+
+def video_stream2():
+    global video_camera2
+    global global_frame2
+    if video_camera2 is None:
+        video_camera2 = VideoCamera2()
+    while True:
+
+        frame = video_camera2.get_frame(state)
+
+        if frame is not None:
+            global_frame2 = frame
+            yield (b'--frame\r\n'
+                   b'Content-Type: image/jpeg\r\n\r\n' + frame
+                   + b'\r\n\r\n')
+        else:
+            yield (b'--frame\r\n'
+                   b'Content-Type: image/jpeg\r\n\r\n'
+                   + global_frame2 + b'\r\n\r\n')
+
+@app.route('/video_viewer2')
+def video_viewer2():
+    return Response(video_stream2(),
+                    mimetype='multipart/x-mixed-replace; boundary=frame')
+
+
 
 @app.route('/login', methods=['GET'])
 def login():
@@ -201,6 +263,43 @@ def insertAdmin():
     return jsonify(result)
 
 
+@app.route('/showAllCus', methods=['GET'])
+def showAllCus():
+    result = util.showAllCus(cur)
+    return jsonify(result)
+
+
+@app.route('/deleteCus', methods=['GET'])
+def deleteCus():
+    id = request.args.to_dict().get('ID')
+    result = util.deleteCus(id, cur)
+    return jsonify(result)
+
+
+@app.route('/updateCus', methods=['GET'])
+def updateCus():
+    id = request.args.to_dict().get('ID')
+    tel = request.args.to_dict().get('tel')
+    result = util.updateCus(id, tel, cur)
+    return jsonify(result)
+
+
+@app.route('/insertCus', methods=['GET'])
+def insertCus():
+    id = request.args.to_dict().get('ID')
+    name = request.args.to_dict().get('name')
+    gender = request.args.to_dict().get('gender')
+    tel = request.args.to_dict().get('tel')
+    re = request.args.to_dict().get('relation')
+    result = util.insertCus(id, name, gender, tel, re, cur)
+    return jsonify(result)
+
+
+
+
+
+
+
 
 def index():
     return render_template(location + '_camera.html')
@@ -231,7 +330,7 @@ def video_stream():
         video_camera = VideoCamera()
 
     while True:
-        frame = video_camera.get_frame()
+        frame = video_camera.get_frame(state)
 
         if frame is not None:
             global_frame = frame

@@ -1,1 +1,1 @@
-from .camerautil import VideoCamera
+from .camerautil import VideoCamera, VideoCamera2

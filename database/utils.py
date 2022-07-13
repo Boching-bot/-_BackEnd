@@ -135,6 +135,33 @@ def insertAdmin(id, name, gender, tel, uid, pw, cur):
     return {'result': '0'}
 
 
+def showAllCus(cur):
+    sql = "SELECT (SELECT COUNT(*) FROM custodian) num, ID, name, gender, tel, relation FROM custodian for json auto"
+    cur.execute(sql)
+    data = cur.fetchall()
+    a = list(data[0])
+    j = json.loads(a[0])
+    return j
+
+
+def deleteCus(ID, cur):
+    sql = "DELETE FROM custodian WHERE ID='" + ID + "'"
+    cur.execute(sql)
+    return {'result': '0'}
+
+
+def updateCus(id, tel, cur):
+    sql = "UPDATE custodian SET tel='"+tel+"' WHERE ID='"+id+"'"
+    cur.execute(sql)
+    return {'result': '0'}
+
+
+def insertCus(id, name, gender, tel, re, cur):
+    sql = "INSERT INTO custodian VALUES('"+id+"', '"+name+"', '"+gender+"', '"+tel+"', '"+re+"')"
+    cur.execute(sql)
+    return {'result': '0'}
+
+
 # connect = pymssql.connect(host="LAPTOP-NJC0SCGO", user="sa", password="123456", database="ZHYL", charset="utf8",
 #                            autocommit=True)
 # cur = connect.cursor()

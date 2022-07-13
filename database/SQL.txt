@@ -61,6 +61,13 @@ INSERT INTO old_person VALUES('001','old_1','m','123123',GETDATE()-10,'','0','',
 INSERT INTO old_person VALUES('002','old_2','m','111222',GETDATE()-7,'','0','','','326','','','','healthy','','19301061')
 INSERT INTO old_person VALUES('003','old_3','f','133133',GETDATE()-6,'','0','','','328','','','','fever','','19301000')
 
+INSERT INTO custodian VALUES('001c', 'cus1', 'm', '789789', 'son')
+INSERT INTO custodian VALUES('002c', 'cus2', 'f', '987087', 'daughter')
+INSERT INTO custodian VALUES('003c', 'cus3', 'm', '912313', 'grandson')
+
+UPDATE old_person SET C1='001c' WHERE ID='001'
+UPDATE old_person SET C1='002c' WHERE ID ='002'
+UPDATE old_person SET C2='003c' WHERE ID ='002'
 
 CREATE PROCEDURE register
 @ID CHAR(30), @name CHAR(20), @userID CHAR(20), @pw CHAR(20), @AID CHAR(20), @Apw CHAR(20)

@@ -63,14 +63,14 @@ faceNet = cv2.dnn.readNet(faceModel, faceProto)
 padding = 20
 recognizer = cv2.face.LBPHFaceRecognizer_create()
 recognizer.read('TrainData/train.yml')
-cascadePath = 'cv2-Haar/haarcascade_frontalface_alt.xml'
+cascadePath = "D:\\Anaconda\\A\\envs\\flask\\Lib\\site-packages\\cv2\\data\\haarcascade_frontalface_alt.xml"
 faceCascade = cv2.CascadeClassifier(cascadePath)
 font = cv2.FONT_HERSHEY_SIMPLEX
 idnum = 0  # id与names数组里面的不相同，相差1
 
 
 # parameters for loading data and images
-detection_model_path = 'trained_models/facemodel/haarcascade_frontalface_default.xml'
+detection_model_path = "D:\\Anaconda\\A\\envs\\flask\\Lib\\site-packages\\cv2\\data\\haarcascade_frontalface_default.xml"
 emotion_model_path = 'trained_models/float_models/fer2013_mini_XCEPTION.33-0.65.hdf5'
 emotion_labels = {0: 'angry', 1: 'disgust', 2: 'fear', 3: 'happy',
                   4: 'sad', 5: 'surprise', 6: 'neutral'}
@@ -395,6 +395,85 @@ class RecordingThread(threading.Thread):
 class VideoCamera(object):
     def __init__(self):
         # Open a camera
+        self.cap = cv2.VideoCapture("rtsp://admin:admin@192.168.0.145:8554/live")
+
+        # Initialize video recording environment
+        self.is_record = False
+        self.out = None
+
+        # Thread for recording
+        self.recordingThread = None
+
+    def __del__(self):
+        self.cap.release()
+
+    def get_frame(self, state):
+        ret, frame = self.cap.read()
+        minW = 0.1 * self.cap.get(8)
+        minH = 0.1 * self.cap.get(8)
+        img = frame
+        if ret:
+            # 面部信息采集
+            if state == 1:
+                faceCollect(img)
+            elif state == 2:
+                img = cv2.flip(img, 1)
+                img = unfamiliarIdenDet(img, minW, minH)
+            elif state == 3:
+                illegalInvasion(img)
+            elif state == 4:
+                img = faceEmotion(frame)
+                img = fall_Detection(img)
+
+            frame = cv2.flip(img, 1)
+            ret, jpeg = cv2.imencode('.jpg', frame)
+            return jpeg.tobytes()
+        else:
+            return None
+
+        # if ret:
+        #
+        #     # 1. 熟人数据采集
+        #     # faceCollect(img)
+        #
+        #     # 2. 年龄,性别,陌生人检测
+        #     #img = unfamiliarIdenDet(frame, minW, minH)
+        #     #frame = img
+        #
+        #     # 3. 区域非法入侵检测
+        #     #frame = cv2.flip(frame, 1)
+        #     #illegalInvasion(frame)
+        #
+        #     #4. 情绪，姿态，跌倒检测
+        #     frame = cv2.flip(frame, 1)
+        #     frame = faceEmotion(frame)
+        #     frame = fall_Detection(frame)
+        #
+        #     #out1 = faceEmotion(frame)
+        #     #frame = fall_Detection(out1)
+        #
+        #     ret, jpeg = cv2.imencode('.jpg', frame)
+        #     return jpeg.tobytes()
+        # else:
+        #     return None
+
+    def start_record(self, save_video_path):
+        self.is_record = True
+        self.recordingThread = RecordingThread(
+            "Video Recording Thread",
+            self.cap, save_video_path)
+        self.recordingThread.start()
+
+    def stop_record(self):
+        self.is_record = False
+
+        if self.recordingThread != None:
+            self.recordingThread.stop()
+
+
+class VideoCamera2(object):
+    def __init__(self):
+        # Open a camera
         self.cap = cv2.VideoCapture(0)
 
         # Initialize video recording environment
@@ -407,35 +486,25 @@ class VideoCamera(object):
     def __del__(self):
         self.cap.release()
 
-    def get_frame(self):
-
+    def get_frame(self,state):
         ret, frame = self.cap.read()
-
         minW = 0.1 * self.cap.get(3)
         minH = 0.1 * self.cap.get(4)
-
         img = frame
-
         if ret:
+            # 面部信息采集
+            if state == 1:
+                faceCollect(img)
+            elif state == 2:
+                frame = unfamiliarIdenDet(img, minW, minH)
+            elif state == 3:
+                illegalInvasion(img)
+                frame = cv2.flip(img, 1)
+            elif state == 4:
+                frame = cv2.flip(img, 1)
+                img = faceEmotion(frame)
+                frame = fall_Detection(img)
 
-            # 1. 熟人数据采集
-            # faceCollect(img)
-
-            # 2. 年龄,性别,陌生人检测
-            #img = unfamiliarIdenDet(frame, minW, minH)
-            #frame = img
-
-            # 3. 区域非法入侵检测
-            #frame = cv2.flip(frame, 1)
-            #illegalInvasion(frame)
-
-            #4. 情绪，姿态，跌倒检测
-            frame = cv2.flip(frame, 1)
-            frame = faceEmotion(frame)
-            frame = fall_Detection(frame)
-
-            #out1 = faceEmotion(frame)
-            #frame = fall_Detection(out1)
 
             ret, jpeg = cv2.imencode('.jpg', frame)
             return jpeg.tobytes()
@@ -451,6 +520,5 @@ class VideoCamera(object):
 
     def stop_record(self):
         self.is_record = False
-
         if self.recordingThread != None:
             self.recordingThread.stop()
