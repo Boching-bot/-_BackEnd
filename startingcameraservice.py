@@ -43,6 +43,7 @@ video_camera = None
 global_frame = None
 
 state = 2
+state2 = 9
 video_camera2 = None
 global_frame2 = None
 
@@ -80,6 +81,21 @@ def state4():
     return jsonify(0)
 
 
+@ app.route('/state8')
+def state8():
+    re = request.args.to_dict().get('id')
+    global state2
+    print(re)
+    state2 = int(re)
+    return jsonify(0)
+@ app.route('/state9')
+def state9():
+    re = request.args.to_dict().get('id')
+    global state2
+    print(re)
+    state2 = int(re)
+    return jsonify(0)
+
 
 def video_stream2():
     global video_camera2
@@ -88,7 +104,7 @@ def video_stream2():
         video_camera2 = VideoCamera2()
     while True:
 
-        frame = video_camera2.get_frame(state)
+        frame = video_camera2.get_frame(state, state2)
 
         if frame is not None:
             global_frame2 = frame
@@ -295,10 +311,11 @@ def insertCus():
     return jsonify(result)
 
 
-
-
-
-
+@app.route('/showDescribe', methods=['GET'])
+def showDescribe():
+    id = request.args.to_dict().get('ID')
+    result = util.showDescribe(id, cur)
+    return jsonify(result)
 
 
 def index():
@@ -330,7 +347,7 @@ def video_stream():
         video_camera = VideoCamera()
 
     while True:
-        frame = video_camera.get_frame(state)
+        frame = video_camera.get_frame(state, state2)
 
         if frame is not None:
             global_frame = frame

@@ -101,7 +101,7 @@ def getFaceBox(net, frame, conf_threshold=0.7):
 
 
 def getImagesAndLabels(path):
-    detector = cv2.CascadeClassifier('cv2/haarcascade_frontalface_alt.xml')
+    detector = cv2.CascadeClassifier('D:\\Anaconda\\A\\envs\\flask\\Lib\\site-packages\\cv2\\data\\haarcascade_frontalface_alt.xml')
     imagePaths = [os.path.join(path, f) for f in os.listdir(path)]
     faceSamples = []
     ids = []
@@ -120,10 +120,10 @@ def getImagesAndLabels(path):
 
 def faceCollect(img):
     face_detector = cv2.CascadeClassifier(
-        'cv2/haarcascade_frontalface_alt.xml')
+        'D:\\Anaconda\\A\\envs\\flask\\Lib\\site-packages\\cv2\\data\\haarcascade_frontalface_alt.xml')
     face_id = "1"
     # 转为灰度图片
-    count = random.randint(1,20)
+    count = random.randint(1,100)
     gray = cv2.cvtColor(img, cv2.COLOR_BGR2GRAY)
     # 检测人脸
     faces = face_detector.detectMultiScale(gray, 1.1, 3)
@@ -203,7 +203,7 @@ def unfamiliarIdenDet(frame,minW,minH):
         # confiidence 0 完全匹配 <50 可以接受 >80 差别较大
         print(confidence)
         if 0 < confidence < 65:
-            # idnum = names[idnum]
+            #idnum = names[idnum]
             confidence = "{0}%".format(round(100 - confidence))
         else:
             idnum = "unknown"
@@ -229,18 +229,18 @@ def unfamiliarIdenDet(frame,minW,minH):
             #pygame.mixer.music.play()
 
             # 发送邮件提醒
-            #msg_from = ''  # 发送方邮箱
-            #passwd = ''  # 填入发送方邮箱的授权码（就是刚刚你拿到的那个授权码）
-            #msg_to = '19301056@bjtu.edu.cn'  # 收件人邮箱
-            #text_content = "有陌生人进入，危险!"  # 发送的邮件内容
+            msg_from = '251312430@qq.com'  # 发送方邮箱
+            passwd = 'lragjwytiznibjff'  # 填入发送方邮箱的授权码（就是刚刚你拿到的那个授权码）
+            msg_to = '19301056@bjtu.edu.cn'  # 收件人邮箱
+            text_content = "有陌生人进入，危险!"  # 发送的邮件内容
 
             #file_path = "D:\\Python Project\\ZHYL_BackEnd\\oldcare\\camera\\unknownData\\wrong-{0}.jpg".format(
                 #time.strftime('%Y%m%d%H%M', time.localtime(time.time())))
 
-            #try:
-                #send_email(msg_from, passwd, msg_to, text_content, file_path)
-            #except:
-                #print("邮件发送有误")
+            try:
+                send_email(msg_from, passwd, msg_to, text_content)
+            except:
+                print("邮件发送有误")
     try:
         cv2.putText(img, str(idnum), (x + 5, y - 5), font, 1, (0, 0, 255), 1)
         cv2.putText(img, str(confidence), (x + 5, y + h - 5), font, 1, (0, 0, 0), 1)
@@ -407,7 +407,7 @@ class VideoCamera(object):
     def __del__(self):
         self.cap.release()
 
-    def get_frame(self, state):
+    def get_frame(self, state, state2):
         ret, frame = self.cap.read()
         minW = 0.1 * self.cap.get(8)
         minH = 0.1 * self.cap.get(8)
@@ -417,7 +417,6 @@ class VideoCamera(object):
             if state == 1:
                 faceCollect(img)
             elif state == 2:
-                img = cv2.flip(img, 1)
                 img = unfamiliarIdenDet(img, minW, minH)
             elif state == 3:
                 illegalInvasion(img)
@@ -430,32 +429,6 @@ class VideoCamera(object):
             return jpeg.tobytes()
         else:
             return None
-
-        # if ret:
-        #
-        #     # 1. 熟人数据采集
-        #     # faceCollect(img)
-        #
-        #     # 2. 年龄,性别,陌生人检测
-        #     #img = unfamiliarIdenDet(frame, minW, minH)
-        #     #frame = img
-        #
-        #     # 3. 区域非法入侵检测
-        #     #frame = cv2.flip(frame, 1)
-        #     #illegalInvasion(frame)
-        #
-        #     #4. 情绪，姿态，跌倒检测
-        #     frame = cv2.flip(frame, 1)
-        #     frame = faceEmotion(frame)
-        #     frame = fall_Detection(frame)
-        #
-        #     #out1 = faceEmotion(frame)
-        #     #frame = fall_Detection(out1)
-        #
-        #     ret, jpeg = cv2.imencode('.jpg', frame)
-        #     return jpeg.tobytes()
-        # else:
-        #     return None
 
     def start_record(self, save_video_path):
         self.is_record = True
@@ -486,14 +459,25 @@ class VideoCamera2(object):
     def __del__(self):
         self.cap.release()
 
-    def get_frame(self,state):
+    def get_frame(self, state, state2):
         ret, frame = self.cap.read()
         minW = 0.1 * self.cap.get(3)
         minH = 0.1 * self.cap.get(4)
         img = frame
+
+        #fourcc = cv2.VideoWriter_fourcc(*"mp4v")
+        #fourcc = cv2.VideoWriter_fourcc('X', 'V', 'I', 'D')  # 使用XVID编码器，xvid为主流的通用视频编码器
+        #size = (int(self.cap.get(cv2.CAP_PROP_FRAME_WIDTH)),
+                #int(self.cap.get(cv2.CAP_PROP_FRAME_HEIGHT)))
+
+        #file_path = 'supervision/record/{0}.avi'.format(
+            #time.strftime('%Y%m%d%H%M', time.localtime(time.time())))
+        #out = cv2.VideoWriter("supervision/records/output_test_xvid-30.avi", fourcc, 30, size)  # 参数分别是：保存的文件名、编码器、帧率、视频宽高
+        #out = cv2.VideoWriter(file_path, fourcc, 20, size)  # 参数分别是：保存的文件名、编码器、帧率、视频宽高
         if ret:
             # 面部信息采集
             if state == 1:
+                #img = cv2.flip(img, 1)
                 faceCollect(img)
             elif state == 2:
                 frame = unfamiliarIdenDet(img, minW, minH)
@@ -505,6 +489,9 @@ class VideoCamera2(object):
                 img = faceEmotion(frame)
                 frame = fall_Detection(img)
 
+
+            # if state2 == 8:
+            #     out.write(img)
 
             ret, jpeg = cv2.imencode('.jpg', frame)
             return jpeg.tobytes()

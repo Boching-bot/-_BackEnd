@@ -3,6 +3,15 @@ import pymssql
 from flask import jsonify
 
 
+def showDescribe(id, cur):
+    sql = "SELECT describe FROM old_person WHERE ID='" + id + "' for json auto"
+    cur.execute(sql)
+    data = cur.fetchall()
+    a = list(data[0])
+    j = json.loads(a[0])
+    return j
+
+
 def login(id, pw, cur):
     sql = "SELECT name FROM admins WHERE userID='" + id + "' AND password='" + pw + "'"
     cur.execute(sql)
@@ -17,7 +26,7 @@ def login(id, pw, cur):
 
 
 def register(id, name, uid, pw, aid, apw, cur):
-    sql = "EXEC register '" + id + "', '" + name + "', '" + uid + "', '" + pw + "', '" + aid + "', '" + apw + "'"
+    sql = "DECLARE @re int EXEC register '" + id + "', '" + name + "', '" + uid + "', '" + pw + "', '" + aid + "', '" + apw + "'  select @re"
     cur.execute(sql)
     data = cur.fetchall()
     return {'result': data}
